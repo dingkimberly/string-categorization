@@ -36,7 +36,7 @@ def process():
 def make_binary(indexes, length):
     vec = np.zeros((1,length))
     for i in indexes:
-        vec[0,i] = 1
+        vec[0,i] = 1/len(indexes)
     return vec
 
 
@@ -62,7 +62,7 @@ def make_vectors(x, y):
         vec = make_binary(indexes, len(word_to_index))
         all_vec.append(vec)
         line_num += 1
-        print(line_num/len(x)*100, "% complete")
+        # print(line_num/len(x)*100, "% complete")
 
     X = np.matrix(np.stack(all_vec))
     Y = np.matrix(y).T
@@ -83,7 +83,7 @@ def make_test_vectors(x, y, word_to_index):
         vec = make_binary(indexes, len(word_to_index))
         all_vec.append(vec)
         line_num += 1
-        print(line_num/len(x)*100, "% complete")
+        # print(line_num/len(x)*100, "% complete")
 
     X = np.matrix(np.stack(all_vec))
     Y = np.matrix(y).T
