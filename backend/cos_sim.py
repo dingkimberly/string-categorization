@@ -39,8 +39,8 @@ def cosine_similarity_pool_map(X, Y, Xtest, params):
             max_sim_indexes.append(i)
 
     cats = set(list(map(lambda x: Y[x,0], max_sim_indexes)))
+    print(cats, params[1])
     if params[1] not in cats:
-        print(cats, params[1])
         return False
     return True
 
