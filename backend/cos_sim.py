@@ -7,15 +7,6 @@ import time
 from multiprocessing import Pool, cpu_count, Value
 
 
-
-# def hyperplanes(X):
-#     transformer = random_projection.GaussianRandomProjection()
-#     print(X.shape)
-#     X_new = transformer.fit_transform(X)
-#     print(X_new.shape)
-
-#     return X_new
-
 class Counter(object):
     def __init__(self):
         self.e = Value('i', 0)
@@ -84,8 +75,6 @@ def t():
     return 
 
 
-
-
 def test(X, Y, Xtest, Ytest):
     errors = 0
 
@@ -110,9 +99,6 @@ def test(X, Y, Xtest, Ytest):
             errors += 1
             print("errors: ", errors/(i1+1)*100, "%")
     return 
-
-
-
 
 if __name__ == "__main__":
     global count
