@@ -3,7 +3,7 @@ import numpy as np
 from sklearn import random_projection
 from sklearn.metrics.pairwise import cosine_similarity
 import functools
-
+import time
 
 
 def hyperplanes(X):
@@ -18,6 +18,17 @@ def hyperplanes(X):
 def cosine_similarity_wrap(vec_to_compare):
     return functools.partial(cosine_similarity, vec_to_compare)
    
+
+def t():
+    global start
+    try:
+        end = time.time()
+        print("time elapsed: ", end - start)
+        start = time.time()
+    except NameError:
+        start = time.time()
+    return 
+
 
 def test(X, Y, Xtest, Ytest):
     print(Y.shape)
@@ -37,7 +48,8 @@ def test(X, Y, Xtest, Ytest):
                 max_sim_indexes = [i2]
             elif sim[0,0] == max_sim:
                 max_sim_indexes.append(i2)
-
+        
+        t()
         print((i1*X.shape[0]+i2)/(X.shape[0]*Xtest.shape[0])*100, "%")
         cats = set(list(map(lambda x: Y[x,0], max_sim_indexes)))
         if Ytest[i1,0] not in cats:
