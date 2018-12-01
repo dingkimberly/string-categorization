@@ -5,15 +5,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import string
 import numpy as np
 from scipy import sparse
-
+import re
 
 def tokenize(text):
-    text = text.translate(str.maketrans({key: None for key in string.punctuation}))
-    text = text.translate(str.maketrans({key: None for key in string.digits}))
+    text = re.sub(r'[^A-Za-z]', r' ', text)
     arr = text.split()
     arr = [x for x in arr if len(x) > 1]
     return arr
-
 
 def process():
     data = pd.read_csv('../search_strings.csv', encoding = "ISO-8859-1")
@@ -113,8 +111,4 @@ def make_test_vectors(x, y, word_to_index):
 if __name__ == "__main__":
     xtrain, xtest, ytrain, ytest = process()
     print(make_vectors(xtrain, ytrain))
-
-
-
-
 
