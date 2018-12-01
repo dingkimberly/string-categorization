@@ -1,4 +1,5 @@
 from Levenshtein import ratio
+from nltk.stem import PorterStemmer
 
 # Takes a bunch of strings and sorts them into groups of similar strings according to Levenshtein distance.
 # Tolerance is a float from 0 to 1. 
@@ -57,5 +58,22 @@ def linear_fuzzy_group(strings, tol):
         else:
             groups[curr] = [curr]
             curr_group_key = curr
+              
+    return groups
+
+# coolio
+def stem_group(strings):
+    
+    groups = {}
+    ps = PorterStemmer()
+    
+    for i in range(len(strings)):
+        curr = strings[i]
+        curr_stem = ps.stem(curr)
+        
+        if groups.get(curr_stem) == None:
+            groups[curr_stem] = [curr]
+        else:
+            groups[curr_stem].append(curr)
               
     return groups
