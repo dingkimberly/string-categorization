@@ -2,7 +2,7 @@ from Levenshtein import ratio
 
 # Takes a bunch of strings and sorts them into groups of similar strings according to Levenshtein distance.
 # Tolerance is a float from 0 to 1. 
-def fuzzy_string_group(strings, tolerance):
+def fuzzy_group(strings, tolerance=0.75):
     
     groups = {}
     
@@ -21,3 +21,17 @@ def fuzzy_string_group(strings, tolerance):
             groups[append_to].append(curr)
     
     return groups
+
+
+def fuzzy_group_key(strings, keyword, tolerance=0.75):
+    
+    matches = [keyword]
+    
+    for i in range(len(strings)):
+        curr = strings[i]
+        append_to = curr
+
+        if ratio(curr, keyword) > tolerance:
+            matches.append(curr) 
+    
+    return matches
