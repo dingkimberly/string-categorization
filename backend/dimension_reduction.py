@@ -133,16 +133,19 @@ def test(X, Y, Xtest, Ytest):
             print("errors: ", errors/(i1+1)*100, "%")
     return 
 
-# Mason please actually write this
-def getCategory(str):
-    return str + " result"
-
 if __name__ == "__main__":
+    from sklearn.decomposition import TruncatedSVD
+    
     global count
     count = Counter()
     xtrain, xtest, ytrain, ytest = process()
-    X, Y, word_to_index = make_vectors(xtrain, ytrain)
+    X, Y, word_to_index = make_vectors(xtrain, ytrain) 
+
+    svd = TruncatedSVD(n_components=100, n_iter=5, random_state=0)
+
+    Xred = svd.fit_transform(X)
     Xtest, Ytest = make_test_vectors(xtest,ytest, word_to_index) 
-    test(X, Y, Xtest, Ytest)
+    Xtest_red = svd.transform(Xtest)
+    test(Xred, Y, Xtest_red, Ytest)
 
 
