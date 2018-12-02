@@ -51,7 +51,7 @@ def get_n_grams_count_listy_list(n, words_listy_list):
     for i in range(len(words_listy_list)):
         
         numwords = len(words_listy_list[i])
-
+ 
         if numwords < n:
             continue
         else:
@@ -77,7 +77,6 @@ def make_n_grams_listy_listy_list(n, words_listy_list):
             for j in range(numwords-n+1):
                 curr_listy_list.append(words[j:j+n])
             grams_col[index] = curr_listy_list
-            index += 1
-                                      
+            index += 1                           
         
     return grams_col
