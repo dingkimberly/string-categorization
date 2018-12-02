@@ -71,27 +71,6 @@ def make_vectors(x, y):
     X = np.matrix(np.stack(all_vec))
     Y = np.matrix(y).T
 
-
-    # count = 0
-    # word_to_index_y = {}
-    # index_to_word_y = {}
-
-    # for word in y:
-    #     if word not in word_to_index_y:
-    #         word_to_index_y[word] = count
-    #         index_to_word_y[count] = word
-    #         count += 1
-    # all_vec_y = []
-    # line_num = 0
-    # for i, word in enumerate(y):
-    #     vec = make_binary([word_to_index_y[word]], len(word_to_index_y))
-    #     all_vec_y.append(vec)
-    #     line_num += 1
-
-    # Y = np.matrix(np.stack(all_vec_y))
-    # print(Y.shape)
-    # print(X.shape)
-
     X = sparse.csr_matrix(X)
 
     return X, Y, word_to_index
