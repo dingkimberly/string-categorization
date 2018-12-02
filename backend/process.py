@@ -6,6 +6,7 @@ import string
 import numpy as np
 from scipy import sparse
 import re
+from gram_maker import make_n_grams
 
 def tokenize(text):
     text = re.sub(r'[^A-Za-z]', r' ', text)
