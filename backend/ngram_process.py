@@ -44,7 +44,7 @@ def make_vectors_ngram(x, y):
     word_to_index = {}
     words = set()
     
-    for j in range(1,6):
+    for j in range(2,4):
         all_grams = make_n_grams_listy_listy_list(j, x.tolist())
         for i in range(x.shape[0]):
             for ng in all_grams[i]:
@@ -65,7 +65,7 @@ def make_vectors_ngram(x, y):
     x = x.tolist()
     for i in range(len(x)):
         indexes = []
-        for j in range(1,6):
+        for j in range(2,4):
             ngrams = make_n_grams_listy_listy_list(j, [x[i]])[0]
             ngrams = list(map(lambda x: tuple(x), ngrams))
             ngrams = list(filter(lambda x: x is not(), ngrams))
@@ -90,7 +90,7 @@ def make_test_vectors_ngram(x, y, word_to_index):
     x = x.tolist()
     for i in range(len(x)):
         indexes = []
-        for j in range(1,6):
+        for j in range(2,4):
             ngrams = make_n_grams_listy_listy_list(j, [x[i]])[0]
             ngrams = list(map(lambda x: tuple(x), ngrams))
             ngrams = list(filter(lambda x: x is not() and x in word_to_index, ngrams))
@@ -98,7 +98,7 @@ def make_test_vectors_ngram(x, y, word_to_index):
         indexes = flatten(indexes)
         vec = make_binary(indexes, len(word_to_index))
         all_vec.append(vec)
-        print(i/len(x)*100,"%")
+        # print(i/len(x)*100,"%")
 
     X = np.matrix(np.stack(all_vec))
     Y = np.matrix(y).T

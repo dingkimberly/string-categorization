@@ -1,7 +1,9 @@
 from process import make_vectors, process, make_test_vectors
+from ngram_process import make_vectors_ngram, make_test_vectors_ngram
 import numpy as np
 from sklearn import random_projection
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.utils.extmath import randomized_svd
 import functools
 import time
 from multiprocessing import Pool, cpu_count, Value
@@ -100,6 +102,31 @@ def test(X, Y, Xtest, Ytest):
             print("errors: ", errors/(i1+1)*100, "%")
     return 
 
+def ngram_test(X, Y, Xtest, Ytest):
+    errors = 0
+
+    for i1, current_row in enumerate(Xtest):
+        cos_sim = cosine_similarity_wrap([current_row])
+        
+        max_sim = 0
+        max_sim_indexes = []
+
+        for i2, row in enumerate(X):
+            sim = cos_sim([row])
+            if sim[0,0] > max_sim:
+                max_sim = sim[0,0]
+                max_sim_indexes = [i2]
+            elif sim[0,0] == max_sim:
+                max_sim_indexes.append(i2)
+        
+        t()
+        print((i1*X.shape[0]+i2)/(X.shape[0]*Xtest.shape[0])*100, "%")
+        cats = set(list(map(lambda x: Y[x,0], max_sim_indexes)))
+        if Ytest[i1,0] not in cats:
+            errors += 1
+            print("errors: ", errors/(i1+1)*100, "%")
+    return 
+
 from sklearn.decomposition import TruncatedSVD
 
 def run_test(comp, iters):
@@ -118,17 +145,42 @@ def run_test(comp, iters):
     
     return count.e.value/count.t.value*100
 
+
+def run_ngram_test(comp, iters):
+    global count
+    count = Counter()
+    xtrain, xtest, ytrain, ytest = process()
+    X, Y, word_to_index = make_vectors_ngram(xtrain, ytrain) 
+
+    svd = TruncatedSVD(n_components=comp, n_iter=iters, random_state=0)
+
+    Xred = svd.fit_transform(X)
+    Xtest, Ytest = make_test_vectors_ngram(xtest,ytest, word_to_index) 
+    Xtest_red = svd.transform(Xtest)
+    
+    pooled_test(Xred, Y, Xtest_red, Ytest)
+    
+    return count.e.value/count.t.value*100
+
+
 if __name__ == "__main__":
     
-    for comp in range(1000, 3000, 1000):
-        for iters in range(5, 10, 5):
-            print("n_components=%d, n_iter=%d" % (comp, iters))
-            start = time.time()
-            error = run_test(comp, iters)
-            end = time.time()
-            print("error: %d" % error)
-            print("elapsed time: %d" % (end - start))
-            print()
+    # for comp in range(1000, 5000, 1000):
+    #     for iters in range(5, 10, 5):
+    #         print("n_components=%d, n_iter=%d" % (comp, iters))
+    #         start = time.time()
+    #         error = run_ngram_test(comp, iters)
+    #         end = time.time()
+    #         print("error: %d" % error)
+    #         print("elapsed time: %d" % (end - start))
+    #         print()
+    xtrain, xtest, ytrain, ytest = process()
+    X, Y, word_to_index = make_vectors_ngram(xtrain, ytrain)
+    svd = TruncatedSVD(n_components=3000, n_iter=6, random_state=0)
+    Xred = svd.fit_transform(X)
+    Xtest, Ytest = make_test_vectors_ngram(xtest,ytest, word_to_index) 
+    Xtest_red = svd.transform(Xtest)
 
+    test(Xred, Y, Xtest_red, Ytest)
 
 
