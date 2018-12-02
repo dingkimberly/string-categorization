@@ -7,6 +7,7 @@ import numpy as np
 from scipy import sparse
 import re
 from gram_maker import make_n_grams
+from fuzzy_string_group import stem_group 
 
 def tokenize(text):
     text = re.sub(r'[^A-Za-z]', r' ', text)
@@ -40,20 +41,24 @@ def make_binary(indexes, length):
 
 
 def make_vectors(x, y):
-    
     word_to_index = {}
-    index_to_word = {}
-    count = 0
 
+    words = set()
     for line in x:
         for word in line:
-            if word not in word_to_index:
-                word_to_index[word] = count
-                index_to_word[count] = word
-                count += 1
+            words.add(word)
+    root_to_word = stem_group(list(words))
+
+    # count of distinct roots for indexing
+    count = 0
+    for root in root_to_word:
+        for word in root_to_word[root]:
+            word_to_index[word] = count
+        count += 1
 
     all_vec = []
 
+    print(len(word_to_index), " words")
 
     line_num = 0
     for line in x:
@@ -64,31 +69,32 @@ def make_vectors(x, y):
         # print(line_num/len(x)*100, "% complete")
 
     X = np.matrix(np.stack(all_vec))
+    Y = np.matrix(y).T
 
 
-    count = 0
-    word_to_index_y = {}
-    index_to_word_y = {}
+    # count = 0
+    # word_to_index_y = {}
+    # index_to_word_y = {}
 
-    for word in y:
-        if word not in word_to_index_y:
-            word_to_index_y[word] = count
-            index_to_word_y[count] = word
-            count += 1
-    all_vec_y = []
-    line_num = 0
-    for i, word in enumerate(y):
-        vec = make_binary([word_to_index_y[word]], len(word_to_index_y))
-        all_vec_y.append(vec)
-        line_num += 1
+    # for word in y:
+    #     if word not in word_to_index_y:
+    #         word_to_index_y[word] = count
+    #         index_to_word_y[count] = word
+    #         count += 1
+    # all_vec_y = []
+    # line_num = 0
+    # for i, word in enumerate(y):
+    #     vec = make_binary([word_to_index_y[word]], len(word_to_index_y))
+    #     all_vec_y.append(vec)
+    #     line_num += 1
 
-    Y = np.matrix(np.stack(all_vec_y))
-    print(Y.shape)
-    print(X.shape)
+    # Y = np.matrix(np.stack(all_vec_y))
+    # print(Y.shape)
+    # print(X.shape)
 
-    # X = sparse.csr_matrix(X)
+    X = sparse.csr_matrix(X)
 
-    return X, Y, index_to_word, word_to_index
+    return X, Y, word_to_index
 
 
 def make_test_vectors(x, y, word_to_index):
