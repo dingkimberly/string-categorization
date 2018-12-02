@@ -44,18 +44,31 @@ def make_n_grams(n, df):
         
     return new_grams
 
-
-def make_n_grams_listy_list(n, df):
+def get_n_grams_count_listy_list(n, words_listy_list):
     
-    n_grams_count = get_n_grams_count(n, df)
+    count = 0
+    
+    for i in range(len(words_listy_list)):
+        
+        numwords = len(words_listy_list[i])
+
+        if numwords < n:
+            continue
+        else:
+            count += numwords - n + 1
+    
+    return count
+
+def make_n_grams_listy_list(n, words_listy_list):
+    
+    n_grams_count = get_n_grams_count_listy_list(n, words_listy_list)
     grams_col = [[] for _ in range(n_grams_count)]
     
     index = 0
     
-    for _, row in df.iterrows():
+    for i in range(len(words_listy_list)):
 
-        words = row[0]
-        category = row[1]
+        words = words_listy_list[i]
         numwords = len(words)
 
         if numwords < n:

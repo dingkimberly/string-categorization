@@ -75,7 +75,6 @@ def t():
         start = time.time()
     return 
 
-
 def test(X, Y, Xtest, Ytest):
     errors = 0
 
@@ -101,21 +100,28 @@ def test(X, Y, Xtest, Ytest):
             print("errors: ", errors/(i1+1)*100, "%")
     return 
 
-if __name__ == "__main__":
-    from sklearn.decomposition import TruncatedSVD
-    
+from sklearn.decomposition import TruncatedSVD
+
+def run_test(comp, iters):
     global count
     count = Counter()
     xtrain, xtest, ytrain, ytest = process()
     X, Y, word_to_index = make_vectors(xtrain, ytrain) 
 
-    svd = TruncatedSVD(n_components=2000, n_iter=5, random_state=0)
+    svd = TruncatedSVD(n_components=comp, n_iter=iters, random_state=0)
 
     Xred = svd.fit_transform(X)
     Xtest, Ytest = make_test_vectors(xtest,ytest, word_to_index) 
     Xtest_red = svd.transform(Xtest)
     
-    
     pooled_test(Xred, Y, Xtest_red, Ytest)
+
+if __name__ == "__main__":
+    
+    for comp in range(1000, 3000, 1000):
+        for iters in range(1, 10):
+            print("n_components=%d, n_iter=%d" % (comp, iters))
+            run_test(comp, iters)
+
 
 
