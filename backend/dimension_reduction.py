@@ -116,12 +116,12 @@ def run_test(comp, iters):
     
     pooled_test(Xred, Y, Xtest_red, Ytest)
     
-    return self.e.value/self.t.value*100
+    return count.e.value/count.t.value*100
 
 if __name__ == "__main__":
     
     for comp in range(1000, 3000, 1000):
-        for iters in range(1, 10):
+        for iters in range(5, 10, 5):
             print("n_components=%d, n_iter=%d" % (comp, iters))
             start = time.time()
             error = run_test(comp, iters)
