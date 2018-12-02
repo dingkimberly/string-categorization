@@ -52,7 +52,7 @@ def cosine_similarity_pool_map(X, Y, Xtest, params):
 
     if params[1] not in cats:
         count.inc_error()
-        count.print_error()
+        #count.print_error()
         return False
 
     return True
@@ -115,13 +115,20 @@ def run_test(comp, iters):
     Xtest_red = svd.transform(Xtest)
     
     pooled_test(Xred, Y, Xtest_red, Ytest)
+    
+    return self.e.value/self.t.value*100
 
 if __name__ == "__main__":
     
     for comp in range(1000, 3000, 1000):
         for iters in range(1, 10):
             print("n_components=%d, n_iter=%d" % (comp, iters))
-            run_test(comp, iters)
+            start = time.time()
+            error = run_test(comp, iters)
+            end = time.time()
+            print("error: %d" % error)
+            print("elapsed time: %d" % (end - start))
+            print()
 
 
 
