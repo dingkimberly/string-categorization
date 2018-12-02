@@ -100,9 +100,9 @@ def test(X, Y, Xtest, Ytest):
             print("errors: ", errors/(i1+1)*100, "%")
     return 
 
-    # Mason please actually write this
-    def getCategory(str):
-        return str + " result"
+# Mason please actually write this
+def getCategory(str):
+    return str + " result"
 
 if __name__ == "__main__":
     global count
